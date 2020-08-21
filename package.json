@@ -1,0 +1,31 @@
+{
+  "name": "dboard",
+  "version": "1.0.0",
+  "description": "A minimal app displaying clock, weather and who-know-what",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack -w",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "start": "npm run build && electron ./dist/main.js",
+    "clean": "rm -rf ./dist"
+  },
+  "repository": "https://github.com/dpetrovych/dboard",
+  "keywords": [],
+  "author": "dpetrovych",
+  "license": "Unlicense",
+  "devDependencies": {
+    "css-loader": "^4.2.1",
+    "electron": "^9.0.4",
+    "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.10.0",
+    "ts-loader": "^8.0.2",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.5",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "webpack-electron-reload": "^1.0.1"
+  }
+}
