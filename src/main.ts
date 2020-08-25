@@ -5,9 +5,6 @@ function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
-    webPreferences: {
-      preload: 'preload.js',
-    },
     width: 800,
   });
 
