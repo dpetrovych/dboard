@@ -2,25 +2,30 @@
   "name": "dboard",
   "version": "1.0.0",
   "description": "A minimal app displaying clock, weather and who-know-what",
+  "main": ".webpack/main",
   "scripts": {
-    "build": "webpack",
-    "watch": "webpack -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "format": "prettier --write src tests",
-    "start": "npm run build && electron ./dist/main.js",
+    "start": "electron-forge start",
     "test": "jest",
-    "clean": "rm -rf ./dist"
+    "clean": "rm -rf ./.webpack ./out",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "repository": "https://github.com/dpetrovych/dboard",
   "keywords": [],
   "author": "dpetrovych",
   "license": "Unlicense",
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.52",
+    "@electron-forge/maker-deb": "^6.0.0-beta.52",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.52",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.52",
+    "@electron-forge/maker-zip": "^6.0.0-beta.52",
     "@types/jest": "^26.0.10",
     "css-loader": "^4.2.1",
     "electron": "^9.0.4",
     "file-loader": "^6.0.0",
-    "html-webpack-plugin": "^4.3.0",
     "jest": "^26.4.2",
     "mini-css-extract-plugin": "^0.10.0",
     "ts-jest": "^26.2.0",
@@ -31,6 +36,54 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "webpack-electron-reload": "^1.0.1"
+    "@electron-forge/plugin-webpack": "^6.0.0-beta.52",
+    "electron-squirrel-startup": "^1.0.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "./src/static/icon"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "dboard"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
+      "plugins": [
+        [
+          "@electron-forge/plugin-webpack",
+          {
+            "mainConfig": "./webpack.main.config.js",
+            "renderer": {
+              "config": "./webpack.renderer.config.js",
+              "entryPoints": [
+                {
+                  "html": "./src/index.html",
+                  "js": "./src/renderer.ts",
+                  "name": "main_window"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    }
   }
 }
