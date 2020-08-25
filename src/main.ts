@@ -1,10 +1,20 @@
 import { app, BrowserWindow } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
+import secrets = require('../secrets.json');
+
+// set secrets
+Object.entries(secrets).map(
+  ([key, value]) => (process.env[key] = value as string)
+);
+
+// Create the main browser window.
 function createWindow() {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+    },
     width: 800,
   });
 

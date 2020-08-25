@@ -1,6 +1,6 @@
 @font-face {
   font-family: WorkSans-Light;
-  src: url(WorkSans-Light.ttf);
+  src: url(../font/WorkSans-Light.ttf);
 }
 
 body {
@@ -50,19 +50,33 @@ ul.background > li {
   z-index: 2;
 }
 
-.clock {
+.clock-weather-container {
+  display: flex;
+  align-items: baseline;
   position: absolute;
   right: 50px;
   bottom: 20px;
-  font-size: 100px;
   z-index: 10;
 }
 
+.weather {
+  font-size: 36px;
+}
+
+.weather::after {
+  content: '°';
+}
+
+.clock {
+  font-size: 100px;
+}
+
 @media (max-width: 768px) {
-  .clock {
+  .clock-weather-container {
     right: 0px;
     left: 0px;
-    text-align: center;
+    align-items: center;
+    flex-direction: column-reverse;
   }
 }
 

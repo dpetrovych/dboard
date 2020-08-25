@@ -42,7 +42,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "icon": "./src/static/icon"
+        "icon": "./src/static/img/icon"
       },
       "makers": [
         {

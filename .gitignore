@@ -1,3 +1,6 @@
 node_modules
 out/
 .webpack/
+
+#application secrets
+secrets.json

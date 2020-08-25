@@ -1,9 +1,13 @@
 import { rotate } from './lib/background';
-import './static/renderer.css';
+import { updateWeather } from './lib/weather';
+import './static/css/renderer.css';
+import './static/css/weather-icons.css';
 
 const TIME_UPDATE_PERIOD_MS = 500;
-const BACKGROUND_UPDATE_PERIOD_MS = 15000;
+const BACKGROUND_UPDATE_PERIOD_MS = 30 * 1000; // 30 sec
 const BACKGROUND_RESOLUTION = { height: 1080, width: 1920 };
+
+const WEATHER_UPDATE_PERIOD_MS = 60 * 60 * 1000; // 1 hour
 
 window.addEventListener('DOMContentLoaded', () => {
   const background = document.createElement('ul');
@@ -11,6 +15,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const overlay = document.createElement('div');
   overlay.classList.add('overlay');
+
+  const clockWeatherContainer = document.createElement('div');
+  clockWeatherContainer.classList.add('clock-weather-container');
+
+  const weather = document.createElement('div');
+  weather.classList.add('weather');
+  weather.textContent = 'loading';
 
   const clock = document.createElement('div');
   clock.classList.add('clock');
@@ -28,20 +39,31 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(displayTime, TIME_UPDATE_PERIOD_MS);
   }
 
-  function carouselBackground() {
+  function updateBackgroundTimeout() {
     rotate(background, BACKGROUND_RESOLUTION).then(() =>
-      setTimeout(carouselBackground, BACKGROUND_UPDATE_PERIOD_MS)
+      setTimeout(updateBackgroundTimeout, BACKGROUND_UPDATE_PERIOD_MS)
+    );
+  }
+
+  function updateWeatherTimeout() {
+    updateWeather(weather).then(() =>
+      setTimeout(updateWeather, WEATHER_UPDATE_PERIOD_MS)
     );
   }
 
   document.body.appendChild(overlay);
   document.body.appendChild(background);
-  document.body.appendChild(clock);
+
+  clockWeatherContainer.appendChild(weather);
+  clockWeatherContainer.appendChild(clock);
+  document.body.appendChild(clockWeatherContainer);
 
   displayTime();
 
   rotate(background, BACKGROUND_RESOLUTION).then(() => {
     overlay.classList.add('overlay-bottom');
-    setTimeout(carouselBackground, BACKGROUND_UPDATE_PERIOD_MS);
+    setTimeout(updateBackgroundTimeout, BACKGROUND_UPDATE_PERIOD_MS);
   });
+
+  updateWeatherTimeout();
 });
