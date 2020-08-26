@@ -23,6 +23,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.52",
     "@electron-forge/maker-zip": "^6.0.0-beta.52",
     "@types/jest": "^26.0.10",
+    "@types/luxon": "^1.24.3",
     "css-loader": "^4.2.1",
     "electron": "^9.0.4",
     "file-loader": "^6.0.0",
@@ -37,7 +38,9 @@
   },
   "dependencies": {
     "@electron-forge/plugin-webpack": "^6.0.0-beta.52",
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^6.0.0",
+    "luxon": "^1.25.0"
   },
   "config": {
     "forge": {

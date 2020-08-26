@@ -41,13 +41,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function updateBackgroundTimeout() {
     rotate(background, BACKGROUND_RESOLUTION).then(() =>
-      setTimeout(updateBackgroundTimeout, BACKGROUND_UPDATE_PERIOD_MS)
+      setTimeout(() => updateBackgroundTimeout(), BACKGROUND_UPDATE_PERIOD_MS)
     );
   }
 
   function updateWeatherTimeout() {
-    updateWeather(weather).then(() =>
-      setTimeout(updateWeather, WEATHER_UPDATE_PERIOD_MS)
+    updateWeather(weather, WEATHER_UPDATE_PERIOD_MS, true).then(() =>
+      setTimeout(() => updateWeatherTimeout(), WEATHER_UPDATE_PERIOD_MS)
     );
   }
 
@@ -62,8 +62,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   rotate(background, BACKGROUND_RESOLUTION).then(() => {
     overlay.classList.add('overlay-bottom');
-    setTimeout(updateBackgroundTimeout, BACKGROUND_UPDATE_PERIOD_MS);
+    setTimeout(() => updateBackgroundTimeout(), BACKGROUND_UPDATE_PERIOD_MS);
   });
 
-  updateWeatherTimeout();
+  updateWeather(weather, WEATHER_UPDATE_PERIOD_MS).then(() =>
+    setTimeout(() => updateWeatherTimeout(), WEATHER_UPDATE_PERIOD_MS)
+  );
 });

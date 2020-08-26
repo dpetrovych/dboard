@@ -61,10 +61,18 @@ ul.background > li {
 
 .weather {
   font-size: 36px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
 }
 
-.weather::after {
-  content: '°';
+.weather-temperature {
+  font-size: 36px;
+}
+
+.weather-condition {
+  font-size: 24px;
+  padding: 6px 12px;
 }
 
 .clock {
@@ -77,6 +85,11 @@ ul.background > li {
     left: 0px;
     align-items: center;
     flex-direction: column-reverse;
+  }
+
+  .weather {
+    flex-direction: row;
+    align-items: center;
   }
 }
 

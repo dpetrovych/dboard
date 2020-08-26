@@ -10,7 +10,7 @@ export type CurrentWeather = {
   sunrise: string;
   sunset: string;
   ts: number;
-  pod: 'd' | 'n';
+  city_name: string;
   weather: Weather;
   temp: number;
 };
@@ -26,10 +26,10 @@ export async function getCurrentWeather({
   latitude: number;
   longitude: number;
 }): Promise<CurrentWeather> {
-  const apiKey = getRemoteConfig('WEATHERBIT_API_KEY');
+  const apiKey = getRemoteConfig('OPEN_WEATHER_MAPS_API_KEY');
 
   const result = await fetch(
-    `https://api.weatherbit.io/v2.0/current?lat=${latitude}&lon=${longitude}&key=${apiKey}&lang=en`
+    `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`
   );
 
   return ((await result.json()) as CurrentWeatherResponse).data[0];
