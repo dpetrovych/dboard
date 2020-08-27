@@ -5,12 +5,8 @@ import {
   getCurrentWeather as getWBCurrentWeather,
   CurrentWeather as WBCurrentWeather,
 } from '../services/weatherbit';
-import { getPublicIPData } from '../services/ipapi';
-
-type WeatherCondition = {
-  code: number;
-  partOfDay: 'd' | 'n';
-};
+import { getPublicIPData, IPResponse } from '../services/ipapi';
+import { WeatherCondition, getConditionClass } from './weatherConditions';
 
 type DayInfo = {
   sunrise: string;
@@ -22,6 +18,7 @@ type Weather = {
   temperature: number;
   condition: WeatherCondition;
   day: DayInfo;
+  region: string;
 };
 
 type WeatherDataCache = {
@@ -30,7 +27,7 @@ type WeatherDataCache = {
   data: Weather;
 };
 
-function mapWBWeather(weather: WBCurrentWeather): Weather {
+function mapWBWeather(weather: WBCurrentWeather, ipData: IPResponse): Weather {
   function timeFromUtcTime(utcTime: string): string {
     const parts = /(\d{2}):(\d{2})/g.exec(utcTime);
     return Duration.fromObject({
@@ -38,11 +35,11 @@ function mapWBWeather(weather: WBCurrentWeather): Weather {
       minutes: parseInt(parts[1], 10),
     })
       .minus({ minutes: new Date().getTimezoneOffset() })
-      .toFormat('HH:mm');
+      .toFormat('hh:mm');
   }
 
   return {
-    timestamp: weather.ts,
+    timestamp: weather.ts * 1000,
     temperature: weather.temp,
     condition: {
       code: parseInt(weather.weather.code, 10),
@@ -52,11 +49,8 @@ function mapWBWeather(weather: WBCurrentWeather): Weather {
       sunrise: timeFromUtcTime(weather.sunrise),
       sunset: timeFromUtcTime(weather.sunset),
     },
+    region: `${ipData.city},${ipData.region},${ipData.country_name}`,
   };
-}
-
-function getConditionClass(condition: WeatherCondition): string {
-  return 'wi-day-sunny';
 }
 
 async function getWeather(
@@ -76,12 +70,19 @@ async function getWeather(
     (timestamp - cache?.timestamp ?? 0) < updatePeriodMs &&
     ipData.ip === cache?.ip
   ) {
-    console.log('weather from cache', cache.data);
+    console.log(
+      `[weather] Loading from cache at ${new Date(cache?.timestamp)}`,
+      cache.data
+    );
     return cache.data;
   }
 
   const weatherBitCurrent = await getWBCurrentWeather(ipData);
-  const weather = mapWBWeather(weatherBitCurrent);
+  const weather = mapWBWeather(weatherBitCurrent, ipData);
+  console.log(
+    `[weather] Update from WeatherBit for ${weather.region}`,
+    weather
+  );
 
   cacheStore.store = { timestamp, ip: ipData.ip, data: weather };
   return weather;

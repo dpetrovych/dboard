@@ -19,6 +19,7 @@ type CurrentWeatherResponse = {
   data: CurrentWeather[];
 };
 
+// API docs: https://www.weatherbit.io/api/swaggerui/weather-api-v2#!/Current32Weather32Data/get_current_lat_lat_lon_lon
 export async function getCurrentWeather({
   latitude,
   longitude,

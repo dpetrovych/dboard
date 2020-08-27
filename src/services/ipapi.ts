@@ -1,7 +1,10 @@
-type IPResponse = {
+export type IPResponse = {
   ip: string;
   latitude: number;
   longitude: number;
+  city: string;
+  region: string;
+  country_name: string;
 };
 
 export async function getPublicIPData(): Promise<IPResponse> {
