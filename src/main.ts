@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, powerSaveBlocker, BrowserWindow } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
 import secrets = require('../secrets.json');
@@ -19,6 +19,25 @@ function createWindow() {
   });
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  if (process.argv.indexOf('--debug-ui') > -1)
+    mainWindow.webContents.openDevTools();
+
+  function lockFullScreen() {
+    const id = powerSaveBlocker.start('prevent-display-sleep');
+    console.log(`[main] Power Save blocked: ${id}`);
+
+    function stop() {
+      if (powerSaveBlocker.isStarted(id)) {
+        powerSaveBlocker.stop(id);
+        console.log(`[main] Power Save unblocked: ${id}`);
+      }
+    }
+
+    mainWindow.once('leave-full-screen', () => stop());
+    mainWindow.once('close', () => stop());
+  }
+
+  mainWindow.on('enter-full-screen', () => lockFullScreen());
 }
 
 // This method will be called when Electron has finished

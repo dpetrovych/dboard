@@ -6,8 +6,8 @@
   "scripts": {
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "format": "prettier --write src tests",
-    "start": "electron-forge start",
     "test": "jest",
+    "start": "electron-forge start",
     "clean": "rm -rf ./.webpack ./out",
     "package": "electron-forge package",
     "make": "electron-forge make"
