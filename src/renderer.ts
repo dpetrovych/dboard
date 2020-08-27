@@ -1,7 +1,8 @@
+
+import { render } from "./app";
+
 import { rotate } from './lib/background';
 import { updateWeather } from './lib/weather';
-import './static/css/renderer.css';
-import './static/css/weather-icons.css';
 
 const TIME_UPDATE_PERIOD_MS = 500;
 const BACKGROUND_UPDATE_PERIOD_MS = 30 * 1000; // 30 sec
@@ -9,63 +10,70 @@ const BACKGROUND_RESOLUTION = { height: 1080, width: 1920 };
 
 const WEATHER_UPDATE_PERIOD_MS = 60 * 60 * 1000; // 1 hour
 
+
 window.addEventListener('DOMContentLoaded', () => {
-  const background = document.createElement('ul');
-  background.classList.add('background');
+  const rootElement = document.createElement('div');
+  rootElement.classList.add('root');
+  document.body.appendChild(rootElement);
 
-  const overlay = document.createElement('div');
-  overlay.classList.add('overlay');
+  render(rootElement);
 
-  const clockWeatherContainer = document.createElement('div');
-  clockWeatherContainer.classList.add('clock-weather-container');
+  // const background = document.createElement('ul');
+  // background.classList.add('background');
 
-  const weather = document.createElement('div');
-  weather.classList.add('weather');
-  weather.textContent = 'loading';
+  // const overlay = document.createElement('div');
+  // overlay.classList.add('overlay');
 
-  const clock = document.createElement('div');
-  clock.classList.add('clock');
+  // const clockWeatherContainer = document.createElement('div');
+  // clockWeatherContainer.classList.add('clock-weather-container');
 
-  const format = new Intl.DateTimeFormat('en', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
+  // const weather = document.createElement('div');
+  // weather.classList.add('weather');
+  // weather.textContent = '...';
 
-  function displayTime() {
-    const now = new Date();
-    const value = format.format(now);
-    clock.innerHTML = value;
-    setTimeout(displayTime, TIME_UPDATE_PERIOD_MS);
-  }
+  // const clock = document.createElement('div');
+  // clock.classList.add('clock');
 
-  function updateBackgroundTimeout() {
-    rotate(background, BACKGROUND_RESOLUTION).then(() =>
-      setTimeout(() => updateBackgroundTimeout(), BACKGROUND_UPDATE_PERIOD_MS)
-    );
-  }
+  // const format = new Intl.DateTimeFormat('en', {
+  //   hour: '2-digit',
+  //   minute: '2-digit',
+  //   hour12: false,
+  // });
 
-  function updateWeatherTimeout() {
-    updateWeather(weather, WEATHER_UPDATE_PERIOD_MS, true).then(() =>
-      setTimeout(() => updateWeatherTimeout(), WEATHER_UPDATE_PERIOD_MS)
-    );
-  }
+  // function displayTime() {
+  //   const now = new Date();
+  //   const value = format.format(now);
+  //   clock.innerHTML = value;
+  //   setTimeout(displayTime, TIME_UPDATE_PERIOD_MS);
+  // }
 
-  document.body.appendChild(overlay);
-  document.body.appendChild(background);
+  // function updateBackgroundTimeout() {
+  //   rotate(background, BACKGROUND_RESOLUTION).then(() =>
+  //     setTimeout(() => updateBackgroundTimeout(), BACKGROUND_UPDATE_PERIOD_MS)
+  //   );
+  // }
 
-  clockWeatherContainer.appendChild(weather);
-  clockWeatherContainer.appendChild(clock);
-  document.body.appendChild(clockWeatherContainer);
+  // function updateWeatherTimeout() {
+  //   updateWeather(weather, WEATHER_UPDATE_PERIOD_MS, true).then(() =>
+  //     setTimeout(() => updateWeatherTimeout(), WEATHER_UPDATE_PERIOD_MS)
+  //   );
+  // }
 
-  displayTime();
+  // document.body.appendChild(overlay);
+  // document.body.appendChild(background);
 
-  rotate(background, BACKGROUND_RESOLUTION).then(() => {
-    overlay.classList.add('overlay-bottom');
-    setTimeout(() => updateBackgroundTimeout(), BACKGROUND_UPDATE_PERIOD_MS);
-  });
+  // clockWeatherContainer.appendChild(weather);
+  // clockWeatherContainer.appendChild(clock);
+  // document.body.appendChild(clockWeatherContainer);
 
-  updateWeather(weather, WEATHER_UPDATE_PERIOD_MS).then(() =>
-    setTimeout(() => updateWeatherTimeout(), WEATHER_UPDATE_PERIOD_MS)
-  );
+  // displayTime();
+
+  // rotate(background, BACKGROUND_RESOLUTION).then(() => {
+  //   overlay.classList.add('overlay-bottom');
+  //   setTimeout(() => updateBackgroundTimeout(), BACKGROUND_UPDATE_PERIOD_MS);
+  // });
+
+  // updateWeather(weather, WEATHER_UPDATE_PERIOD_MS).then(() =>
+  //   setTimeout(() => updateWeatherTimeout(), WEATHER_UPDATE_PERIOD_MS)
+  // );
 });

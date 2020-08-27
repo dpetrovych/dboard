@@ -13,12 +13,12 @@ type DayInfo = {
   sunset: string;
 };
 
-type Weather = {
-  timestamp: number;
+export type Weather = {
+  timestamp?: number;
   temperature: number;
   condition: WeatherCondition;
-  day: DayInfo;
-  region: string;
+  day?: DayInfo;
+  region?: string;
 };
 
 type WeatherDataCache = {
