@@ -9,6 +9,8 @@ import { store } from './store';
 import './static/css/app.css';
 import './static/css/weather-icons.css';
 
+const TIME_UPDATE_PERIOD_MS = 500;
+
 export const App: FunctionComponent = ({}) => {
   return (
     <>
@@ -25,4 +27,11 @@ export const render = (element: Element) => {
     </Provider>,
     element
   );
+
+  function displayTime() {
+    store.dispatch({ type: 'TIME_TICK', timestamp: new Date().getTime() });
+    setTimeout(displayTime, TIME_UPDATE_PERIOD_MS);
+  }
+
+  displayTime();
 };

@@ -1,5 +1,4 @@
-
-import { render } from "./app";
+import { render } from './app';
 
 import { rotate } from './lib/background';
 import { updateWeather } from './lib/weather';
@@ -9,7 +8,6 @@ const BACKGROUND_UPDATE_PERIOD_MS = 30 * 1000; // 30 sec
 const BACKGROUND_RESOLUTION = { height: 1080, width: 1920 };
 
 const WEATHER_UPDATE_PERIOD_MS = 60 * 60 * 1000; // 1 hour
-
 
 window.addEventListener('DOMContentLoaded', () => {
   const rootElement = document.createElement('div');
@@ -31,22 +29,6 @@ window.addEventListener('DOMContentLoaded', () => {
   // weather.classList.add('weather');
   // weather.textContent = '...';
 
-  // const clock = document.createElement('div');
-  // clock.classList.add('clock');
-
-  // const format = new Intl.DateTimeFormat('en', {
-  //   hour: '2-digit',
-  //   minute: '2-digit',
-  //   hour12: false,
-  // });
-
-  // function displayTime() {
-  //   const now = new Date();
-  //   const value = format.format(now);
-  //   clock.innerHTML = value;
-  //   setTimeout(displayTime, TIME_UPDATE_PERIOD_MS);
-  // }
-
   // function updateBackgroundTimeout() {
   //   rotate(background, BACKGROUND_RESOLUTION).then(() =>
   //     setTimeout(() => updateBackgroundTimeout(), BACKGROUND_UPDATE_PERIOD_MS)
@@ -63,10 +45,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // document.body.appendChild(background);
 
   // clockWeatherContainer.appendChild(weather);
-  // clockWeatherContainer.appendChild(clock);
   // document.body.appendChild(clockWeatherContainer);
-
-  // displayTime();
 
   // rotate(background, BACKGROUND_RESOLUTION).then(() => {
   //   overlay.classList.add('overlay-bottom');

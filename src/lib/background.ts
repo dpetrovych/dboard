@@ -2,6 +2,12 @@ import { count } from './collections';
 import { getBackground } from '../services/unsplash';
 import { mod } from './math';
 
+export type Background = {
+  downloadTime: number;
+  categories: string[];
+  url: string;
+};
+
 export type Resolution = {
   height: number;
   width: number;

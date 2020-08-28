@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
 import { getConditionClass } from '../lib/weatherConditions';
 import { Weather } from '../lib/weather';
+import { MinuteClock } from './minuteClock';
 
 export const WeatherClock: FunctionComponent<{
   time?: string;
@@ -28,7 +29,7 @@ export const WeatherClock: FunctionComponent<{
           <div className={'weather-temperature'}>{tempFormatted}</div>
           <div className={`weather-condition fade-in wi ${wiCondition}`}></div>
         </div>
-        <div className={'clock'}>{state.time}</div>
+        <MinuteClock />
       </div>
     </>
   );
