@@ -4,10 +4,8 @@ import { Weather } from '../lib/weather';
 import { MinuteClock } from './minuteClock';
 
 export const WeatherClock: FunctionComponent<{
-  time?: string;
   weather?: Weather;
 }> = ({
-  time = '12:00',
   weather = {
     temperature: 24.3,
     condition: {
@@ -16,14 +14,13 @@ export const WeatherClock: FunctionComponent<{
     },
   },
 }) => {
-  const [state] = useState({ time, weather });
+  const [state] = useState({ weather });
 
   const wiCondition = getConditionClass(state.weather.condition);
   const tempFormatted = `${Math.round(state.weather.temperature)}°`;
 
   return (
     <>
-      <div className={'overlay overlay-bottom'}></div>
       <div className={'clock-weather-container'}>
         <div className={'weather'}>
           <div className={'weather-temperature'}>{tempFormatted}</div>

@@ -58,7 +58,7 @@ async function getWeather(
   force: boolean
 ): Promise<Weather> {
   const cacheStore = new ElectronStore<WeatherDataCache | undefined>({
-    name: 'cache',
+    name: 'weather',
   });
 
   const cache = cacheStore.store;

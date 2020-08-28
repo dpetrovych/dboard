@@ -1,20 +1,13 @@
 import { createStore } from 'redux';
 import { useSelector as reduxUseSelector } from 'react-redux';
 
-import { reducer } from './reducer';
+import { reducer } from './reducers';
 import { getMinutes } from '../lib/time';
-import { AppState } from './state';
+import { AppState } from './states';
 import { AppActions } from './actions';
 
 const initState: AppState = {
-  backgrounds: [
-    {
-      downloadTime: new Date().getTime(),
-      categories: ['init'],
-      url:
-        'https://images.unsplash.com/photo-1596290685046-756064638d9e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1920&h=1080&fit=crop',
-    },
-  ],
+  backgrounds: null,
   time: {
     minutes: getMinutes(new Date()),
   },
