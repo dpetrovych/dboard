@@ -5,7 +5,7 @@ import {
   getCurrentWeather as getWBCurrentWeather,
   CurrentWeather as WBCurrentWeather,
 } from '../services/weatherbit';
-import { getPublicIPData, IPResponse } from '../services/ipapi';
+import { getPublicIPData, IPData } from '../lib/ip';
 import { WeatherCondition, getConditionClass } from './weatherConditions';
 
 type DayInfo = {
@@ -27,7 +27,7 @@ type WeatherDataCache = {
   data: Weather;
 };
 
-function mapWBWeather(weather: WBCurrentWeather, ipData: IPResponse): Weather {
+function mapWBWeather(weather: WBCurrentWeather, ipData: IPData): Weather {
   function timeFromUtcTime(utcTime: string): string {
     const parts = /(\d{2}):(\d{2})/g.exec(utcTime);
     return Duration.fromObject({
@@ -49,7 +49,7 @@ function mapWBWeather(weather: WBCurrentWeather, ipData: IPResponse): Weather {
       sunrise: timeFromUtcTime(weather.sunrise),
       sunset: timeFromUtcTime(weather.sunset),
     },
-    region: `${ipData.city},${ipData.region},${ipData.country_name}`,
+    region: `${ipData.city},${ipData.region},${ipData.country}`,
   };
 }
 

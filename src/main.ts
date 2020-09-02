@@ -1,10 +1,10 @@
 import { app, powerSaveBlocker, BrowserWindow } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
-import secrets = require('../secrets.json');
+import { read as readSecrets } from './config/secrets';
 
 // set secrets
-Object.entries(secrets).map(
+Object.entries(readSecrets()).map(
   ([key, value]) => (process.env[key] = value as string)
 );
 
@@ -15,6 +15,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
     },
+    autoHideMenuBar: true,
     width: 800,
   });
 
