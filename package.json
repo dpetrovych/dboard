@@ -8,7 +8,7 @@
     "format": "prettier --write src tests",
     "test": "jest",
     "start": "electron-forge start",
-    "clean": "rm -rf ./.webpack ./out",
+    "clean": "rimraf ./.webpack ./out",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
@@ -33,6 +33,7 @@
     "jest": "^26.4.2",
     "mini-css-extract-plugin": "^0.10.0",
     "prettier": "^2.1.1",
+    "rimraf": "^3.0.2",
     "ts-jest": "^26.2.0",
     "ts-loader": "^8.0.2",
     "tslint": "^6.1.2",
