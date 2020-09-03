@@ -1,15 +1,24 @@
-import { count } from './collections';
 import { getBackground } from '../services/unsplash';
 import { mod } from './math';
+import { store } from '../store';
+import ElectronStore from 'electron-store';
+
+export type Background = {
+  downloadTime: number;
+  categories: string[];
+  url: string;
+};
 
 export type Resolution = {
   height: number;
   width: number;
 };
 
+type BackgroundCache = Background;
+
 const MAX_IMAGES_BUFFER_COUNT = 5;
 
-const categories: { [category: string]: [number, number] } = {
+const CATEGORY_CONFIGURATION: { [category: string]: [number, number] } = {
   // always
   wallpaper: [0, 23],
 
@@ -28,63 +37,87 @@ const categories: { [category: string]: [number, number] } = {
 
 export function getCategories(now: Date): string[] {
   const hour = now.getHours();
-  return Object.entries(categories)
+  return Object.entries(CATEGORY_CONFIGURATION)
     .filter(
       ([_, range]) => mod(hour - range[0], 24) <= mod(range[1] - range[0], 24)
     )
     .map(([category]) => category);
 }
 
-export async function rotate(
-  backgroundUl: HTMLUListElement,
-  resolution: Resolution
-): Promise<void> {
-  const categoriesNow = getCategories(new Date());
-  const categoriesDataValue = categoriesNow.join(',');
-  const bufferOverflow = () =>
-    count(backgroundUl.childNodes) > MAX_IMAGES_BUFFER_COUNT;
+function getCacheStore() {
+  return new ElectronStore<BackgroundCache | undefined>({
+    name: 'background',
+  });
+}
 
-  function addBackground(href: string): void {
-    const li = document.createElement('li');
-    li.style.backgroundImage = `url(${href})`;
-    li.classList.add('fade-in');
-    li.setAttribute('data-categories', categoriesDataValue);
-    backgroundUl.appendChild(li);
-    while (bufferOverflow())
-      backgroundUl.removeChild(backgroundUl.firstElementChild);
-  }
+function dispatchLoadFail() {
+  store.dispatch({
+    type: 'BACKGROUND_DOWNLOAD_FAIL',
+    timestamp: new Date().getTime(),
+  });
+}
 
-  function rotateLast(): Promise<void> {
-    backgroundUl.appendChild(
-      backgroundUl.removeChild(backgroundUl.firstElementChild)
-    );
-    return Promise.resolve();
-  }
-
-  try {
-    const img = new Image();
-    img.src = await getBackground(resolution, categoriesNow);
-
-    if (img.complete) {
-      addBackground(img.src);
-      return Promise.resolve();
-    }
-    return new Promise((resolve, reject) => {
-      img.onload = () => {
-        try {
-          addBackground(img.src);
-          resolve();
-        } catch (e) {
-          rotateLast();
-          reject(e);
-        }
-      };
-      img.onabort = () => {
-        rotateLast();
-        reject();
-      };
+async function download(backgroundSeed: {
+  url: string;
+  categories: string[];
+}): Promise<Background> {
+  function dispatchLoadSuccess(background: Background) {
+    store.dispatch({
+      type: 'BACKGROUND_DOWNLOAD_SUCCESS',
+      background,
+      maxBuffer: MAX_IMAGES_BUFFER_COUNT,
     });
-  } catch (e) {
-    return rotateLast();
   }
+
+  const img = new Image();
+  img.src = backgroundSeed.url;
+
+  if (img.complete) {
+    const background = {
+      ...backgroundSeed,
+      downloadTime: new Date().getTime(),
+    };
+    dispatchLoadSuccess(background);
+    return Promise.resolve(background);
+  }
+
+  return new Promise<Background>((resolve, reject) => {
+    img.onload = () => {
+      try {
+        const background = {
+          ...backgroundSeed,
+          downloadTime: new Date().getTime(),
+        };
+        dispatchLoadSuccess(background);
+        resolve(background);
+      } catch (e) {
+        dispatchLoadFail();
+        reject(e);
+      }
+    };
+    img.onabort = () => {
+      dispatchLoadFail();
+      reject();
+    };
+  });
+}
+
+export async function preloadLast(): Promise<boolean> {
+  const background: Background | undefined = getCacheStore().store;
+  if (background?.url) {
+    await download(background);
+    return true;
+  }
+
+  return false;
+}
+
+export async function downloadNew(resolution: Resolution): Promise<void> {
+  const now = new Date();
+  const categories = getCategories(now);
+  const url = await getBackground(resolution, categories);
+
+  const background = await download({ url, categories });
+
+  getCacheStore().store = background;
 }
