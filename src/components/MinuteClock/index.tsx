@@ -1,5 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import { useSelector } from '../store';
+import { useSelector } from '../../store';
+
+import './MinuteClock.sass';
 
 const format = new Intl.DateTimeFormat('en', {
   hour: '2-digit',
@@ -12,11 +14,13 @@ function formatMinutes(minutes: number): string {
   return format.format(date);
 }
 
-export const MinuteClock: FunctionComponent = ({}) => {
+const MinuteClock: FunctionComponent = ({}) => {
   const minutes = useSelector((state) => state.time.minutes);
   return (
     <>
-      <div className={'clock'}>{formatMinutes(minutes)}</div>
+      <div className={'minute-clock'}>{formatMinutes(minutes)}</div>
     </>
   );
 };
+
+export default MinuteClock;

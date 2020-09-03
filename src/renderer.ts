@@ -1,4 +1,4 @@
-import { render } from './app';
+import { render } from './App';
 
 window.addEventListener('DOMContentLoaded', () => {
   const rootElement = document.createElement('div');

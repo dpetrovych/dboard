@@ -1,0 +1,20 @@
+@import ../animations
+@import weather-icons/css/weather-icons
+    
+.weather-badge
+    font-size: 36px
+    display: flex
+    flex-direction: column-reverse
+    align-items: flex-end
+
+.weather-badge-temperature
+    font-size: 36px
+
+.weather-badge-condition
+    font-size: 24px
+    padding: 6px 12px
+
+@media (max-width: 768px)
+    .weather-badge
+        flex-direction: row
+        align-items: center

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { Background } from './components/background';
-import { WeatherClock } from './components/weatherClock';
+import Background from './components/Background';
+import WeatherClock from './components/WeatherClock';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
@@ -8,8 +8,7 @@ import { downloadNew, preloadLast } from './lib/background';
 import { updateWeather } from './lib/weather';
 import { store } from './store';
 
-import './static/css/app.css';
-import './static/css/weather-icons.css';
+import './App.sass';
 
 const TIME_UPDATE_PERIOD_MS = 500;
 

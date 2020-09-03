@@ -4,14 +4,20 @@ module.exports = {
   module: {
     rules: [
       { test: /\.tsx?$/i, use: 'ts-loader', exclude: /node_modules/ },
-      { test: /\.css$/i, use: [MiniCssExtractPlugin.loader, 'css-loader'] },
-      { test: /\.(png|ttf)$/i, use: ['file-loader'] },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'resolve-url-loader',
+          'sass-loader'
+        ],
+      },
+      { test: /\.(png|ttf|eot|woff2?|svg)$/i, use: ['file-loader'] },
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.css', '.png', '.ttf'],
   },
-  plugins: [
-    new MiniCssExtractPlugin(),
-  ],
+  plugins: [new MiniCssExtractPlugin()],
 };

@@ -1,11 +1,13 @@
 import React, { FunctionComponent } from 'react';
-import { useSelector } from '../store';
-import { BackgroundState } from '../store/states';
+import { useSelector } from '../../store';
+import { BackgroundState } from '../../store/states';
+
+import './Background.sass';
 
 const drop = (background?: BackgroundState): string =>
   background ? 'overlay-bottom' : '';
 
-export const Background: FunctionComponent = ({}) => {
+const Background: FunctionComponent = ({}) => {
   const backgrounds = useSelector((state) => state.backgrounds);
   return (
     <>
@@ -22,3 +24,5 @@ export const Background: FunctionComponent = ({}) => {
     </>
   );
 };
+
+export default Background;

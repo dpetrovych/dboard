@@ -1,0 +1,14 @@
+.weather-clock-container
+    display: flex
+    align-items: baseline
+    position: absolute
+    right: 50px
+    bottom: 20px
+    z-index: 10
+
+@media (max-width: 768px)
+    .weather-clock-container
+        right: 0px
+        left: 0px
+        align-items: center
+        flex-direction: column-reverse
