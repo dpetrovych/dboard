@@ -8,9 +8,13 @@ export const WeatherBadge: FunctionComponent = () => {
     <>
       {weather && (
         <div className={'weather'}>
-          <div className={'weather-temperature'}>{`${Math.round(
-            weather?.temperature
-          )}°`}</div>
+          <div
+            className={'weather-temperature'}
+            dangerouslySetInnerHTML={{
+              __html: `${Math.round(weather?.temperature)}&deg;`,
+            }}
+          >
+          </div>
           <div
             className={`weather-condition fade-in wi ${getConditionClass(
               weather.condition
