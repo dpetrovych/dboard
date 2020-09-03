@@ -1,4 +1,5 @@
 # dboard
+[![Build Status](https://travis-ci.org/dpetrovych/dboard.svg?branch=master)](https://travis-ci.org/dpetrovych/dboard)
 
 A minimal app displaying clock, weather and who-know-what.
 
