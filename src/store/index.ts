@@ -11,7 +11,6 @@ const initState: AppState = {
   time: {
     minutes: getMinutes(new Date()),
   },
-  weather: { temperature: 20, condition: { code: 800, partOfDay: 'd' } },
 };
 
 export function useSelector<T>(selector: (state: AppState) => T): T {

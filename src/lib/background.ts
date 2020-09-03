@@ -104,7 +104,7 @@ async function download(backgroundSeed: {
 
 export async function preloadLast(): Promise<boolean> {
   const background: Background | undefined = getCacheStore().store;
-  if (background) {
+  if (background?.url) {
     await download(background);
     return true;
   }

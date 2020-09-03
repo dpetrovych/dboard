@@ -6,20 +6,25 @@ import {
   CurrentWeather as WBCurrentWeather,
 } from '../services/weatherbit';
 import { getPublicIPData, IPData } from '../lib/ip';
-import { WeatherCondition, getConditionClass } from './weatherConditions';
+import { WeatherCondition } from './weatherConditions';
+import { store } from '../store';
 
 type DayInfo = {
   sunrise: string;
   sunset: string;
 };
 
-export type Weather = {
+export interface Weather {
   timestamp?: number;
   temperature: number;
   condition: WeatherCondition;
   day?: DayInfo;
   region?: string;
-};
+}
+
+export interface WeatherFrom extends Weather {
+  source: 'CACHE' | 'WEATHER_BIT' | 'OPEN_WEATHER_MAP';
+}
 
 type WeatherDataCache = {
   timestamp: number;
@@ -56,7 +61,7 @@ function mapWBWeather(weather: WBCurrentWeather, ipData: IPData): Weather {
 async function getWeather(
   updatePeriodMs: number,
   force: boolean
-): Promise<Weather> {
+): Promise<WeatherFrom> {
   const cacheStore = new ElectronStore<WeatherDataCache | undefined>({
     name: 'weather',
   });
@@ -74,7 +79,7 @@ async function getWeather(
       `[weather] Loading from cache at ${new Date(cache?.timestamp)}`,
       cache.data
     );
-    return cache.data;
+    return { ...cache.data, source: 'CACHE' };
   }
 
   const weatherBitCurrent = await getWBCurrentWeather(ipData);
@@ -85,30 +90,23 @@ async function getWeather(
   );
 
   cacheStore.store = { timestamp, ip: ipData.ip, data: weather };
-  return weather;
+  return { ...weather, source: 'WEATHER_BIT' };
 }
 
 export async function updateWeather(
-  container: Element,
   updatePeriodMs: number,
   force: boolean = false
 ): Promise<void> {
-  container.textContent = '';
-
-  const weather = await getWeather(updatePeriodMs, force);
-
-  const temperatureElement = document.createElement('div');
-  temperatureElement.classList.add('weather-temperature', 'fade-in');
-  temperatureElement.textContent = `${Math.round(weather.temperature)}°`;
-
-  const conditionElement = document.createElement('div');
-  conditionElement.classList.add(
-    'weather-condition',
-    'fade-in',
-    'wi',
-    getConditionClass(weather.condition)
-  );
-
-  container.appendChild(temperatureElement);
-  container.appendChild(conditionElement);
+  try {
+    const weather = await getWeather(updatePeriodMs, force);
+    store.dispatch({
+      type: 'WEATHER_DOWNLOAD_SUCCESS',
+      weather,
+    });
+  } catch (e) {
+    store.dispatch({
+      type: 'WEATHER_DOWNLOAD_FAIL',
+      timestamp: new Date().getTime(),
+    });
+  }
 }

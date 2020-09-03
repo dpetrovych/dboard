@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import { downloadNew, preloadLast } from './lib/background';
+import { updateWeather } from './lib/weather';
 import { store } from './store';
 
 import './static/css/app.css';
@@ -13,7 +14,9 @@ import './static/css/weather-icons.css';
 const TIME_UPDATE_PERIOD_MS = 500;
 
 const BACKGROUND_RESOLUTION = { height: 1080, width: 1920 };
-const BACKGROUND_UPDATE_PERIOD_MS = 5 * 1000; // 30 sec
+const BACKGROUND_UPDATE_PERIOD_MS = 30 * 1000; // 30 sec
+
+const WEATHER_UPDATE_PERIOD_MS = 60 * 60 * 1000; // 1 hour
 
 export const App: FunctionComponent = ({}) => {
   return (
@@ -43,6 +46,12 @@ export const render = async (element: Element): Promise<void> => {
     );
   }
 
+  function updateWeatherTimeout() {
+    updateWeather(WEATHER_UPDATE_PERIOD_MS, true).then(() =>
+      setTimeout(() => updateWeatherTimeout(), WEATHER_UPDATE_PERIOD_MS)
+    );
+  }
+
   // init time
   displayTime();
 
@@ -51,5 +60,10 @@ export const render = async (element: Element): Promise<void> => {
   setTimeout(
     () => rotateBackground(),
     preloadLastSuccessful ? BACKGROUND_UPDATE_PERIOD_MS : 0
+  );
+
+  // init weather
+  updateWeather(WEATHER_UPDATE_PERIOD_MS).then(() =>
+    setTimeout(() => updateWeatherTimeout(), WEATHER_UPDATE_PERIOD_MS)
   );
 };
