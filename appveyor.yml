@@ -1,0 +1,31 @@
+image:
+  - Visual Studio 2019
+  - macOS
+
+environment:
+  nodejs_version: '12'
+
+install:
+  - cmd: powershell Install-Product node $env:nodejs_version x64
+  - sh: nvm install $nodejs_version
+  - npm install
+
+test_script:
+  - npm run make
+  - cmd: powershell Get-ChildItem -r .\out\make
+  - sh: ls -R ./out/make
+
+build: off
+
+deploy:
+  release: dboard-v$(APPVEYOR_BUILD_VERSION)
+  description: 'Automatic release'
+  provider: GitHub
+  auth_token:
+    secure: vpYMkVsD/dErGGUCsDdrCkCUOcHmYMotHAnwf1jVlBFZjDoBekR3lezr7ByzZ29U
+  artifact: /out\/make\/squirrel\.windows\/.*\.exe/
+  draft: false
+  prerelease: false
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true
